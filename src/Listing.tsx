@@ -30,7 +30,7 @@ export const Listing = () =>{
                 if(!!rejectedList){
                     rList.push( ...JSON.parse(rejectedList));
                 }
-                // if location id is returned then we'll filter the data
+                // if locationData id is returned then we'll filter the data
                 if(location.id){
                     // filtering user list by removing shortlisted and rejected candidates
                     const filterList = [...sList,...rList];
@@ -77,13 +77,14 @@ export const Listing = () =>{
     return (
     <div style={{maxWidth:"70%", margin:'0 auto', textAlign:"center"}}>
         
-        <div>
+        <div style={{width:"50%", display:"flex", justifyContent:"space-between", margin:"10px auto"}}>
             <Link to="/shortlisted" state={{name:"Shortlisted"}}>
                 <button>Shortlisted</button>
             </Link>
             <Link to="/rejected" state={{name:"Rejected"}}>
                 <button>Rejected</button>
             </Link>
+            <button onClick={()=>{localStorage.clear(); window.location.reload()}}>Reset All Selection</button>
         </div>
         <div className="search">
             <input type="text" onChange={(e)=>{_handleSearch(e.target.value)}}/>
