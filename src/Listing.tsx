@@ -3,7 +3,7 @@ import { Link, useLocation} from "react-router-dom"
 import axios from "axios";
 export const Listing = () =>{
     const [users, setUsers] = useState([]);
-
+    const [listedUsers, setListedUsers] = useState([]);
     const [search, setSearch] = useState("");
     const location =  {...useLocation()?.state};
     useEffect(()=>{
@@ -11,12 +11,15 @@ export const Listing = () =>{
         const fetchUsers = async () => {
             // Calling api and saving returned data in res
             const res = await axios.get("https://s3-ap-southeast-1.amazonaws.com/he-public-data/users49b8675.json");
+
             // fetching selected & rejected list from localstorage
                 const selectedList = localStorage.getItem("shortlisted");
                 const rejectedList = localStorage.getItem("rejected");
+
                 // array store list of candidates
                 const sList:any = [];
                 const rList:any = [];
+
                 let data = res.data;
                 // checking if selected & rejected list is empty
                 if(selectedList != null ){
@@ -30,6 +33,7 @@ export const Listing = () =>{
                     // filtering user list by removing shortlisted and rejected candidates
                     data = data.filter((item:any) => !sList.find(({ id }:any) => item.id === id));
                     data = data.filter((item:any) => !rList.find(({ id }:any) => item.id === id));
+
                     // fetching candidate based on returned id and array with object of one candidate will be saved
                     let candidate  = data.filter((user:any)=>{
                         if(user.id == location.id){
@@ -52,14 +56,16 @@ export const Listing = () =>{
                 data = data.filter((item:any) => !sList.find(({ id }:any) => item.id === id));
                 data = data.filter((item:any) => !rList.find(({ id }:any) => item.id === id));
                 setUsers(data);
+                setListedUsers(data);
         }
         fetchUsers();
     },[]);
 
-    const _handleSearch = () =>{
+    const _handleSearch = (e:any) =>{
         //Filtering data based on search
-        let data  = users.filter((user:any)=>{
-            if(user.name.includes(search)){
+        setUsers(listedUsers);
+        let data  = listedUsers.filter((user:any)=>{
+            if(user.name.includes(e)){
                 return user.name;
             }
            });
@@ -68,9 +74,17 @@ export const Listing = () =>{
     return (
     <div style={{maxWidth:"70%", margin:'0 auto', textAlign:"center"}}>
         <h3>Available candidates</h3>
+
         <div className="search">
-            <input type="text" onChange={(e) => { setSearch(e.target.value)}}/>
-            <button onClick={_handleSearch}>Search</button>
+            <input type="text" onChange={(e)=>{_handleSearch(e.target.value)}}/>
+        </div>
+        <div>
+            <Link to="/shortlisted" state={{name:"Shortlisted"}}>
+                <button>Shortlisted</button>
+            </Link>
+            <Link to="/rejected" state={{name:"Rejected"}}>
+                <button>Rejected</button>
+            </Link>
         </div>
         <div style={{display:"flex", flexWrap:"wrap"}}>
         {
@@ -87,14 +101,7 @@ export const Listing = () =>{
             })
         }
         </div>
-        <div>
-            <Link to="/shortlisted" state={{name:"Shortlisted"}}>
-                <button>Shortlisted</button>
-            </Link>
-            <Link to="/rejected" state={{name:"Rejected"}}>
-                <button>Rejected</button>
-            </Link>
-        </div>
+        
     </div>
     )
 }

@@ -3,11 +3,7 @@ import { Link } from 'react-router-dom'
 import { Listing } from './Listing'
 
 function App() {
-  return (
-    <div>
-      <Listing />
-    </div>
-  )
+  return <Listing />
 }
 
 export default App

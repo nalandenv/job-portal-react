@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router";
+import {Link} from "react-router-dom";
 import { Listing } from "./Listing";
 
 export const Shortlisted = () => {
@@ -24,6 +25,7 @@ export const Shortlisted = () => {
     },[])
     return (
         <div>
+            <Link to="/"><button>BACK</button></Link>
             <h1>{flag} candidates</h1>
             {
                 users.map((item:any)=>{
