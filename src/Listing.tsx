@@ -9,31 +9,46 @@ export const Listing = () =>{
     useEffect(()=>{
         window.history.replaceState({}, document.title)
         const fetchUsers = async () => {
+            // Calling api and saving returned data in res
             const res = await axios.get("https://s3-ap-southeast-1.amazonaws.com/he-public-data/users49b8675.json");
+            // fetching selected & rejected list from localstorage
                 const selectedList = localStorage.getItem("shortlisted");
                 const rejectedList = localStorage.getItem("rejected");
+                // array store list of candidates
                 const sList:any = [];
                 const rList:any = [];
                 let data = res.data;
+                // checking if selected & rejected list is empty
                 if(selectedList != null ){
                     sList.push(...JSON.parse(selectedList));
                 }
                 if(rejectedList != null){
                     rList.push( ...JSON.parse(rejectedList));
                 }
-                if(location.index >=0){
+                // if location id is returned then we'll filter the data
+                if(location.id){
+                    // filtering user list by removing shortlisted and rejected candidates
                     data = data.filter((item:any) => !sList.find(({ id }:any) => item.id === id));
                     data = data.filter((item:any) => !rList.find(({ id }:any) => item.id === id));
+                    // fetching candidate based on returned id and array with object of one candidate will be saved
+                    let candidate  = data.filter((user:any)=>{
+                        if(user.id == location.id){
+                            return user;
+                        }
+                       });
+                    //    condition to check if the user is selected or rejected
                     if(location.select == true){
-                        sList.push(data[location.index])
+                        // pushing first element of candidate array as its the only element
+                        sList.push(candidate[0]);
                         localStorage.setItem("shortlisted", JSON.stringify(sList));
                     }
                     if(location.select == false){
-                        rList.push(data[location.index])
+                        rList.push(candidate[0]);
                         localStorage.setItem("rejected", JSON.stringify(rList));
                     }
                     
                 }
+                // filtering data again with new user added
                 data = data.filter((item:any) => !sList.find(({ id }:any) => item.id === id));
                 data = data.filter((item:any) => !rList.find(({ id }:any) => item.id === id));
                 setUsers(data);
@@ -42,13 +57,13 @@ export const Listing = () =>{
     },[]);
 
     const _handleSearch = () =>{
-
+        //Filtering data based on search
         let data  = users.filter((user:any)=>{
             if(user.name.includes(search)){
                 return user.name;
             }
            });
-           
+           setUsers(data);
     }
     return (
     <div style={{maxWidth:"70%", margin:'0 auto', textAlign:"center"}}>
