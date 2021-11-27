@@ -1,1 +1,1 @@
-export const PROFILES_URL = "https://s3-ap-southeast-1.amazonaws.com/he-public-data/users49b8675.json";
+export const PROFILES_URL = import.meta.env.VITE_API_URL;
