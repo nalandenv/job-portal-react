@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { Listing } from "./Listing";
+import { Listing } from "./components/Listing";
 import app from "./utils/firebase/index";
 import SignIn from "./components/SignIn";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
