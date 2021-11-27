@@ -3,4 +3,6 @@ node_modules/
 dist
 dist-ssr
 *.local
+.env
+job-portal-react.zip
 Archieve.zip
