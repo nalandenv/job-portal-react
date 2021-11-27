@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const Thumbnail = ({ user }: any) => {
   return (
     <div
@@ -28,4 +30,4 @@ const Thumbnail = ({ user }: any) => {
   );
 };
 
-export default Thumbnail;
+export default memo(Thumbnail);

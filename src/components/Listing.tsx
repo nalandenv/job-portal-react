@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Thumbnail from "./Thumbnail";
-import { getItem, setItem } from "../utils/local-storage";
+import {
+  getItem,
+  getSessionItem,
+  setItem,
+  setSessionItem,
+} from "../utils/local-storage";
 import { SHORTLISTED, REJECTED } from "../utils/local-storage/config";
 import { getCandidates } from "../utils/network/routes";
 export const Listing = () => {
@@ -16,8 +21,8 @@ export const Listing = () => {
       const candidateResponse = await getCandidates();
 
       // fetching selected & rejected list from localstorage
-      const selectedList = getItem(SHORTLISTED);
-      const rejectedList = getItem(REJECTED);
+      const selectedList = getSessionItem(SHORTLISTED);
+      const rejectedList = getSessionItem(REJECTED);
 
       // array store list of candidates
       const sList: any = [];
@@ -49,11 +54,11 @@ export const Listing = () => {
         if (location.select === true) {
           // pushing first element of candidate array as its the only element
           sList.push(candidate[0]);
-          setItem(SHORTLISTED, sList);
+          setSessionItem(SHORTLISTED, sList);
         }
         if (location.select === false) {
           rList.push(candidate[0]);
-          setItem(REJECTED, rList);
+          setSessionItem(REJECTED, rList);
         }
       }
       // filtering data again with new user added
@@ -81,13 +86,13 @@ export const Listing = () => {
     },
     [listedUsers]
   );
-  const thumbnailList = users.map((user: any, index: any) => {
+  const thumbnailList = users.map((user: any) => {
     return (
       <Link
         key={user.id}
         style={{ textDecoration: "none", color: "black" }}
         to={`${user.id}`}
-        state={{ user, index }}
+        state={{ user }}
       >
         <Thumbnail user={user} />
       </Link>
@@ -112,6 +117,7 @@ export const Listing = () => {
         <button
           onClick={() => {
             localStorage.clear();
+            sessionStorage.clear();
             window.location.reload();
           }}
         >

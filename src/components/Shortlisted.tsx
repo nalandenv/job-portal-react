@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { getItem } from "../utils/local-storage";
@@ -17,7 +17,7 @@ export const Shortlisted = () => {
     setUsers(JSON.parse(usersList));
   }, []);
   const listToRender = users.map((item: any) => {
-    return <Thumbnail user={item} />;
+    return <Thumbnail key={item.id} user={item} />;
   });
   return (
     <div>

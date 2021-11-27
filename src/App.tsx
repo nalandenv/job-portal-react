@@ -15,7 +15,7 @@ function App() {
       }
     });
   }, []);
-  console.log(uId);
+
   if (!uId) {
     return <SignIn />;
   }
